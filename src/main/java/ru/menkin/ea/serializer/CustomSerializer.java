@@ -53,33 +53,13 @@ public class CustomSerializer {
             if (field.getType().getName().startsWith("ru")) {
                 printFields(field.get(obj), index);
             } else {
-                String name = field.getName();
-                Object value = field.get(obj);
-
-                System.out.println(addTab(index) + name + ": " + value.toString());
+                System.out.println(addTab(index) + field.getName() + ": " + field.get(obj).toString());
             }
         }
     }
 
-    //для наглядности делаем отступы, чтобы показать всю структуру (аля Питон)
-    private String addTab(int count) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < count; i++) {
-            sb.append("\t");
-        }
-        return sb.toString();
-    }
-
 	public void deserialize(String filePath){
-		File file = new File(filePath);
-        byte[] byteArray = new byte[(int) file.length()];
-        try {
-            FileInputStream fileInputStream = new FileInputStream(file);
-            fileInputStream.read(byteArray);
-            fileInputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        byte[] byteArray = readFromFile(filePath);
         int byteIterator = byteArray[START_POINT];
         char[] charArray = new char[byteIterator];
         for (int i = 0; i < byteIterator; i++) {
@@ -129,15 +109,6 @@ public class CustomSerializer {
         }
     }
 
-    //пишем в файл нашу последовательность байт
-    private void writeToFile(ArrayList<Byte> byteSequence) throws IOException {
-        FileOutputStream fileOutputStream = new FileOutputStream(FILE_PATH);
-        for (Byte b : byteSequence) {
-            fileOutputStream.write(b);
-        }
-        fileOutputStream.close();
-    }
-
     /**
      * @param byteIterator индекс массива
      * @param byteArray массив байт
@@ -168,14 +139,10 @@ public class CustomSerializer {
                 }
                 switch (field.getType().getName()) {
                     case ("int"):
-                        String s1 = new String(chars);
-                        int arg1 = Integer.parseInt(s1);
-                        valuesForFields.put(field.getName(), arg1);
+                        valuesForFields.put(field.getName(), Integer.parseInt(new String(chars)));
                         break;
                     case ("boolean"):
-                        String s3 = new String(chars);
-                        boolean arg4 = Boolean.parseBoolean(s3);
-                        valuesForFields.put(field.getName(), arg4);
+                        valuesForFields.put(field.getName(), Boolean.parseBoolean(new String(chars)));
                         break;
                     case ("java.lang.String"):
                         valuesForFields.put(field.getName(), new String(chars));
@@ -185,5 +152,45 @@ public class CustomSerializer {
         }
         Result result = new Result(valuesForFields, byteIterator);
         return result;
+    }
+
+    //пишем в файл нашу последовательность байт
+    private void writeToFile(ArrayList<Byte> byteSequence) throws IOException {
+        FileOutputStream fileOutputStream = new FileOutputStream(FILE_PATH);
+        for (Byte b : byteSequence) {
+            fileOutputStream.write(b);
+        }
+        fileOutputStream.close();
+    }
+
+    private byte[] readFromFile(String filePath) {
+        File file = new File(filePath);
+        byte[] byteArray = new byte[(int) file.length()];
+        try {
+            FileInputStream fileInputStream = new FileInputStream(file);
+            fileInputStream.read(byteArray);
+            fileInputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return byteArray;
+    }
+
+    private char[] getChars(int byteIterator, byte[] byteArray) {
+        int length = byteArray[++byteIterator];
+        char[] chars = new char[length];
+        for (int i = 0; i < length; i++) {
+            chars[i] = (char) byteArray[++byteIterator];
+        }
+        return chars;
+    }
+
+    //для наглядности делаем отступы, чтобы показать всю структуру (аля Питон)
+    private String addTab(int count) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < count; i++) {
+            sb.append("\t");
+        }
+        return sb.toString();
     }
 }
