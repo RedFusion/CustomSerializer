@@ -80,7 +80,7 @@ public class CustomSerializer {
         }
 	}
 
-    //подготавливаем(заполняем) байтовый массив для записи в файл
+    // prepare the (fill) byte array to write to the file
     private void fill(Object instance, ArrayList<Byte> byteSequence) throws UnsupportedEncodingException {
         byte[] className = instance.getClass().getCanonicalName().getBytes(UTF8);
         byteSequence.add(new Integer(className.length).byteValue());
@@ -89,7 +89,7 @@ public class CustomSerializer {
         }
     }
 
-    //исследуем наше дерево объектов(граф)
+    // examine our object tree (graph)
     private void exploreGraph(Object instance, ArrayList<Byte> byteSequence) throws IllegalAccessException, UnsupportedEncodingException {
         fill(instance, byteSequence);
 
@@ -110,10 +110,10 @@ public class CustomSerializer {
     }
 
     /**
-     * @param byteIterator индекс массива
-     * @param byteArray массив байт
-     * @param instance корневой элемент поддерева
-     * @return Возвращаем объект и итератор(нужен, чтобы продолжить поиск по оставшимся элементам)
+     * @param byteIterator array index
+     * @param byteArray byte array
+     * @param instance the root element of the subtree
+     * @return teturn the object and an iterator (need to continue the search for the remaining elements)
      */
     private Result buildTree(int byteIterator, byte[] byteArray, Class instance) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         //LinkedHashMap иначе сбивается порядок
@@ -154,7 +154,7 @@ public class CustomSerializer {
         return result;
     }
 
-    //пишем в файл нашу последовательность байт
+    // write to file our sequence of bytes
     private void writeToFile(ArrayList<Byte> byteSequence) throws IOException {
         FileOutputStream fileOutputStream = new FileOutputStream(FILE_PATH);
         for (Byte b : byteSequence) {
@@ -185,7 +185,7 @@ public class CustomSerializer {
         return chars;
     }
 
-    //для наглядности делаем отступы, чтобы показать всю структуру (аля Питон)
+    // For clarity indents to show the entire structure (ala Python)
     private String addTab(int count) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < count; i++) {
