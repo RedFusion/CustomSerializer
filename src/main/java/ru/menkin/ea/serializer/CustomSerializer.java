@@ -94,9 +94,9 @@ public class CustomSerializer {
         fill(instance, byteSequence);
 
         for (Field field : instance.getClass().getDeclaredFields()) {
-            ///проще способа не нашел - определяем является ли поле классом или примитивом. Метод isPrimitive не подходит
+            //easier ways found - to determine whether the field is a class or primitive. The method is not suitable isPrimitive
             if (field.getType().getName().startsWith("ru")) {
-                //если является - повторяем процедуру
+                // If it is - repeat the procedure
                 exploreGraph(field.get(instance), byteSequence);
             } else {
                 Object obj = field.get(instance);
@@ -113,7 +113,7 @@ public class CustomSerializer {
      * @param byteIterator array index
      * @param byteArray byte array
      * @param instance the root element of the subtree
-     * @return teturn the object and an iterator (need to continue the search for the remaining elements)
+     * @return the object and an iterator (need to continue the search for the remaining elements)
      */
     private Result buildTree(int byteIterator, byte[] byteArray, Class instance) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         //LinkedHashMap иначе сбивается порядок
@@ -174,15 +174,6 @@ public class CustomSerializer {
             e.printStackTrace();
         }
         return byteArray;
-    }
-
-    private char[] getChars(int byteIterator, byte[] byteArray) {
-        int length = byteArray[++byteIterator];
-        char[] chars = new char[length];
-        for (int i = 0; i < length; i++) {
-            chars[i] = (char) byteArray[++byteIterator];
-        }
-        return chars;
     }
 
     // For clarity indents to show the entire structure (ala Python)

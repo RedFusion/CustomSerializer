@@ -6,7 +6,7 @@ import static ru.menkin.ea.serializer.CustomSerializer.FILE_PATH;
 
 public class Main {
 	public static void main(String[] args) {
-		//создаем вложенную структуру объектов
+		// create a nested structure of objects
 		Flat flat = new Flat(4);
 		Worker worker = new Worker("Victor", 200000, false, flat);
 		Address address = new Address("Ekaterinburg", 615208);
@@ -15,7 +15,6 @@ public class Main {
 		CustomSerializer serializer = new CustomSerializer();
 		serializer.serialize(office);
 
-		//спорный момент, стоит ли передавать имя файла, которое мы и так знаем, не хотелооь оставлять метод пустым
 		serializer.deserialize(FILE_PATH);
 	}
 }
