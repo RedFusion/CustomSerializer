@@ -5,7 +5,8 @@ import java.lang.reflect.*;
 import java.util.*;
 
 public class CustomSerializer {
-	public static final String FILE_PATH = "D:\\Result.txt";
+
+    public static final String FILE_PATH = "D:\\Result.txt";
     public static final String UTF8 = "UTF-8";
     private static final int START_POINT = 0;
 
@@ -116,7 +117,7 @@ public class CustomSerializer {
      * @return the object and an iterator (need to continue the search for the remaining elements)
      */
     private Result buildTree(int byteIterator, byte[] byteArray, Class instance) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        //LinkedHashMap иначе сбивается порядок
+        //LinkedHashMap otherwise the procedure goes astray
         Map<String, Object> valuesForFields = new LinkedHashMap<>();
         for (Field field : instance.getDeclaredFields()) {
             if (field.getType().getName().startsWith("ru")) {
